@@ -8,6 +8,7 @@ namespace TslServer
     {
         static async Task Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
             builder.WebHost.UseUrls("http://localhost:6969");
             var app = builder.Build();
