@@ -9,9 +9,9 @@ namespace TslServer
         static async Task Main(string[] args)
         {
             using HttpClient client = new HttpClient();
-            string heldData = null;
+            string heldData = null; //container to check new requests for updates. would be a model object not a string if not a 2 hour demo
             var builder = WebApplication.CreateBuilder(args);
-            builder.WebHost.UseUrls("http://localhost:6969");
+            builder.WebHost.UseUrls("http://localhost:6868"); //move to connectionstrings or config files for larger application or if security matters
             var app = builder.Build();
             app.UseWebSockets();
             app.Map("/ws", async context =>
@@ -22,7 +22,7 @@ namespace TslServer
                     while (true)
                     {
                         string x = await processPosts(client);
-                        if (heldData != x)
+                        if (heldData != x) //only send to the client if there is new data from api
                         {
                             var bytes = Encoding.UTF8.GetBytes(x);
                             var arraySegment = new ArraySegment<byte>(bytes, 0, bytes.Length);
@@ -36,7 +36,7 @@ namespace TslServer
                             }
                             heldData = x;
                         }
-                        Thread.Sleep(1000);
+                        Thread.Sleep(1000); //polling rate would be a more accessable variable maybe option for client depending on use case of real project
                     }
                 }
                 else
